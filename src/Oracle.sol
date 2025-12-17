@@ -2,10 +2,14 @@
 pragma solidity ^0.8.13;
 
 contract Oracle {
-    mapping(address => bool) public isNode;
+    address public owner;
     address[] public nodes;
+    mapping(address => bool) public isNode;
+    mapping(string => uint256) public currentPrices;
 
-    mapping(bytes32 => uint256) public prices;
+    constructor() {
+        owner = msg.sender;
+    }
 
     function registerNode() external {
         require(!isNode[msg.sender]);
@@ -24,11 +28,6 @@ contract Oracle {
                 break;
             }
         }
-    }
-
-    function setPrice(bytes32 asset, uint256 price) external {
-        require(isNode[msg.sender]);
-        prices[asset] = price;
     }
 
     function quorum() public view returns (uint256) {
